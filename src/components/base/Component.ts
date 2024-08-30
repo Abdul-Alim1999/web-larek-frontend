@@ -5,8 +5,12 @@ export abstract class Component<T> {
   protected constructor(protected readonly container: HTMLElement) { }
 
   // Переключить класс
-  toggleClass(element: HTMLElement, className: string, force?: boolean): void {
-    element.classList.toggle(className, force);
+  toggleClass(element: HTMLElement, className: string, add: boolean) {
+    if (add) {
+      element.classList.add(className);
+    } else {
+      element.classList.remove(className);
+    }
   }
 
   // Установить текстовое содержимое

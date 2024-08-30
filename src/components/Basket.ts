@@ -31,39 +31,39 @@ export class Basket extends Component<IBasket> {
   ) {
     super(container);
 
-    this._button = container.querySelector(`.${blockName}__button`);
-    this._price = container.querySelector(`.${blockName}__price`);
-    this._list = container.querySelector(`.${blockName}__list`);
+    this._button = container.querySelector(`.${blockName}__button`) as HTMLButtonElement;
+    this._price = container.querySelector(`.${blockName}__price`) as HTMLElement;
+    this._list = container.querySelector(`.${blockName}__list`) as HTMLElement;
 
     if (this._button) {
-      this._button.addEventListener('click', () => this.events.emit('basket:order'))
+      this._button.addEventListener('click', () => this.events.emit('basket:order'));
     }
   }
 
   // Сеттер для общей цены
   set price(price: number) {
-    this._price.textContent = handlePrice(price) + ' синапсов';
+    this.setText(this._price, handlePrice(price) + ' синапсов');
   }
 
   // Сеттер для списка товаров 
   set list(items: HTMLElement[]) {
     this._list.replaceChildren(...items);
-    this._button.disabled = items.length ? false : true;
+    this.setDisabled(this._button, items.length === 0);
   }
 
   // Метод отключающий кнопку "Оформить"
   disableButton() {
-    this._button.disabled = true
+    this.setDisabled(this._button, true);
   }
 
   // Метод для обновления индексов таблички при удалении товара из корзины
   refreshIndices() {
-    Array.from(this._list.children).forEach(
-      (item, index) =>
-      (item.querySelector(`.basket__item-index`)!.textContent = (
-        index + 1
-      ).toString())
-    );
+    Array.from(this._list.children).forEach((item, index) => {
+      // Проверяем, является ли item экземпляром StoreItemBasket
+      if (item instanceof StoreItemBasket) {
+        item.index = index + 1; // Устанавливаем индекс через сеттер
+      }
+    });
   }
 }
 
@@ -76,6 +76,9 @@ export interface IStoreItemBasketActions {
   onClick: (event: MouseEvent) => void;
 }
 
+/*
+  * Класс, описывающий элемент корзины
+  * */
 export class StoreItemBasket extends Component<IProductBasket> {
   protected _index: HTMLElement;
   protected _title: HTMLElement;
@@ -89,10 +92,10 @@ export class StoreItemBasket extends Component<IProductBasket> {
   ) {
     super(container);
 
-    this._title = container.querySelector(`.${blockName}__title`);
-    this._index = container.querySelector(`.basket__item-index`);
-    this._price = container.querySelector(`.${blockName}__price`);
-    this._button = container.querySelector(`.${blockName}__button`);
+    this._title = container.querySelector(`.${blockName}__title`) as HTMLElement;
+    this._index = container.querySelector(`.basket__item-index`) as HTMLElement;
+    this._price = container.querySelector(`.${blockName}__price`) as HTMLElement;
+    this._button = container.querySelector(`.${blockName}__button`) as HTMLButtonElement;
 
     if (this._button) {
       this._button.addEventListener('click', (evt) => {
@@ -103,14 +106,14 @@ export class StoreItemBasket extends Component<IProductBasket> {
   }
 
   set title(value: string) {
-    this._title.textContent = value;
+    this.setText(this._title, value);
   }
 
   set index(value: number) {
-    this._index.textContent = value.toString();
+    this.setText(this._index, value.toString());
   }
 
   set price(value: number) {
-    this._price.textContent = handlePrice(value) + ' синапсов';
+    this.setText(this._price, handlePrice(value) + ' синапсов');
   }
 }

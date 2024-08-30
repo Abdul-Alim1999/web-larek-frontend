@@ -16,7 +16,7 @@ export interface IOrder {
   * Класс, описывающий окошко заказа товара
   * */
 export class Order extends Form<IOrder> {
-  // Сссылки на внутренние элементы
+  // Ссылки на внутренние элементы
   protected _card: HTMLButtonElement;
   protected _cash: HTMLButtonElement;
 
@@ -33,23 +33,23 @@ export class Order extends Form<IOrder> {
 
     if (this._cash) {
       this._cash.addEventListener('click', () => {
-        this._cash.classList.add('button_alt-active')
-        this._card.classList.remove('button_alt-active')
-        this.onInputChange('payment', 'cash')
-      })
+        this.toggleClass(this._cash, 'button_alt-active', true);
+        this.toggleClass(this._card, 'button_alt-active', false);
+        this.onInputChange('payment', 'cash');
+      });
     }
     if (this._card) {
       this._card.addEventListener('click', () => {
-        this._card.classList.add('button_alt-active')
-        this._cash.classList.remove('button_alt-active')
-        this.onInputChange('payment', 'card')
-      })
+        this.toggleClass(this._card, 'button_alt-active', true);
+        this.toggleClass(this._cash, 'button_alt-active', false);
+        this.onInputChange('payment', 'card');
+      });
     }
   }
 
   // Метод, отключающий подсвечивание кнопок
   disableButtons() {
-    this._cash.classList.remove('button_alt-active')
-    this._card.classList.remove('button_alt-active')
+    this.toggleClass(this._cash, 'button_alt-active', false);
+    this.toggleClass(this._card, 'button_alt-active', false);
   }
 }
