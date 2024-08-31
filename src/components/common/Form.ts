@@ -10,7 +10,6 @@ interface IFormState {
 export class Form<T> extends Component<IFormState> {
   protected _submit: HTMLButtonElement;
   protected _errors: HTMLElement;
-  protected changeEventName: string;
 
   constructor(
     protected container: HTMLFormElement,
@@ -18,7 +17,6 @@ export class Form<T> extends Component<IFormState> {
     changeEventName: string = 'formInput:change'  // универсальное название события по умолчанию
   ) {
     super(container);
-    this.changeEventName = changeEventName;  // Позволяем задать имя события
 
     this._submit = ensureElement<HTMLButtonElement>(
       'button[type=submit]',
@@ -40,14 +38,14 @@ export class Form<T> extends Component<IFormState> {
   }
 
   protected onInputChange(field: keyof T, value: string) {
-    this.events.emit(this.changeEventName, {
+    this.events.emit(`${this.container.name}.${String(field)}:change`, {
       field,
       value,
     });
   }
 
   set valid(value: boolean) {
-    this._submit.disabled = !value;
+    this.setDisabled(this._submit, !value);
   }
 
   set errors(value: string) {

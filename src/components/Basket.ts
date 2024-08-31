@@ -1,5 +1,5 @@
-import { IProduct } from '../types';
-import { handlePrice } from '../utils/utils';
+import { IProduct } from '../types/index';
+import { handlePrice, ensureAllElements} from '../utils/utils';
 import { Component } from './base/Component';
 import { IEvents } from './base/events';
 
@@ -22,6 +22,7 @@ export class Basket extends Component<IBasket> {
   protected _list: HTMLElement;
   protected _price: HTMLElement;
   protected _button: HTMLButtonElement;
+  protected _index: HTMLSpanElement[];
 
   // Конструктор принимает имя блока, родительский элемент и обработчик событий
   constructor(
@@ -57,19 +58,21 @@ export class Basket extends Component<IBasket> {
   }
 
   // Метод для обновления индексов таблички при удалении товара из корзины
-  refreshIndices() {
-    Array.from(this._list.children).forEach((item, index) => {
-      // Проверяем, является ли item экземпляром StoreItemBasket
-      if (item instanceof StoreItemBasket) {
-        item.index = index + 1; // Устанавливаем индекс через сеттер
-      }
-    });
+  refreshIndexes(data?: Partial<IBasket>): HTMLElement {
+    this._index = ensureAllElements<HTMLSpanElement>('.basket__item-index', this.container);
+
+    this._index.forEach( (item, index) => {
+      this.setText(item, String(index+1))
+    })
+
+    return super.render(data);
   }
 }
 
 export interface IProductBasket extends IProduct {
   id: string;
   index: number;
+  setIndex: (number: number) => void;
 }
 
 export interface IStoreItemBasketActions {

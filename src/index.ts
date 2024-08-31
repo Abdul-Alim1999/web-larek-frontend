@@ -124,13 +124,14 @@ events.on('basket:open', () => {
   });
 });
 
+
 // Удалить товар из корзины
 events.on('basket:delete', (item: Product) => {
   appData.deleteFromBasket(item.id);
   item.selected = false;
   basket.price = appData.getTotalBasketPrice();
   page.counter = appData.getBasketAmount();
-  basket.refreshIndices();
+  basket.refreshIndexes();
   if (!appData.basket.length) {
     basket.disableButton();
   }
@@ -151,6 +152,8 @@ events.on('basket:order', () => {
 
 // Изменилось состояние валидации заказа
 events.on('orderFormErrors:change', (errors: Partial<IOrderForm>) => {
+  console.log('render');
+  
   const { payment, address } = errors;
   order.valid = !payment && !address;
   order.errors = Object.values({ payment, address }).filter(i => !!i).join('; ');
