@@ -29,7 +29,7 @@ export class EventEmitter implements IEvents {
     }
   }
 
-  emit<T extends object>(eventName: string, data?: T) {
+  emit<T extends object>(eventName: string, data?: T) {    
     this._events.forEach((subscribers, name) => {
       if (name === '*') subscribers.forEach(callback => callback({
         eventName,

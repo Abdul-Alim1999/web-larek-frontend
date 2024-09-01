@@ -14,7 +14,6 @@ export class Form<T> extends Component<IFormState> {
   constructor(
     protected container: HTMLFormElement,
     protected events: IEvents,
-    changeEventName: string = 'formInput:change'  // универсальное название события по умолчанию
   ) {
     super(container);
 
@@ -37,7 +36,7 @@ export class Form<T> extends Component<IFormState> {
     });
   }
 
-  protected onInputChange(field: keyof T, value: string) {
+  protected onInputChange(field: keyof T, value: string) {  
     this.events.emit(`${this.container.name}.${String(field)}:change`, {
       field,
       value,
